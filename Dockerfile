@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 3001
 
 # Commande pour démarrer l'application
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/server.ts"]

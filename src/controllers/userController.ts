@@ -1,74 +1,65 @@
 import { Request, Response } from 'express';
-import { User } from '../models/userModel'; // Assurez-vous que cela importe correctement votre modèle User
-import bcrypt from 'bcryptjs';
+import User from '../models/userModel';
+import bcrypt from 'bcrypt';
 
-// Créer un nouvel utilisateur
-export const createUser = async (req: Request, res: Response): Promise<Response> => {
-    const { email, password, role } = req.body;
+// Définissez les types pour le corps de la requête
+interface RegisterRequestBody {
+    email: string;
+    password: string;
+}
 
-    try {
-        // Vérifier si l'utilisateur existe déjà
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'Email déjà utilisé' });
+interface LoginRequestBody {
+    email: string;
+    password: string;
+}
+
+class UserController {
+    // Fonction pour enregistrer un nouvel utilisateur
+    public async registerUser(req: Request<{}, {}, RegisterRequestBody>, res: Response): Promise<void> {
+        const { email, password } = req.body;
+        
+        try {
+            // Hachez le mot de passe avant de sauvegarder
+            const hashedPassword = await bcrypt.hash(password, 10);
+            
+            const newUser = new User({ email, password: hashedPassword });
+            await newUser.save();
+            
+            res.status(201).json({ message: 'Utilisateur créé avec succès.' });
+        } catch (error) {
+            console.error(error); // Pour déboguer
+            res.status(500).json({ message: 'Erreur lors de la création de l’utilisateur.' });
         }
-
-        // Hash du mot de passe
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ email, password: hashedPassword, role });
-
-        await newUser.save();
-        return res.status(201).json(newUser);
-    } catch (error) {
-        return res.status(500).json({ message: 'Erreur lors de la création de l\'utilisateur', error });
     }
-};
 
-// Récupérer tous les utilisateurs
-export const getUsers = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const users = await User.find();
-        return res.status(200).json(users);
-    } catch (error) {
-        return res.status(500).json({ message: 'Erreur lors de la récupération des utilisateurs', error });
-    }
-};
+    // Fonction pour connecter un utilisateur
+    public async loginUser(req: Request<{}, {}, LoginRequestBody>, res: Response): Promise<void> {
+        const { email, password } = req.body;
 
-// Récupérer un utilisateur par ID
-export const getUserById = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const user = await User.findById(req.params.id);
-        if (!user) {
-            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        try {
+            const user = await User.findOne({ email });
+            if (!user) {
+                res.status(401).json({ message: 'Utilisateur non trouvé.' });
+                return; // Ajouter un retour pour éviter l'erreur de type
+            }
+
+            // Vérifiez le mot de passe
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                res.status(401).json({ message: 'Mot de passe incorrect.' });
+                return; // Ajouter un retour pour éviter l'erreur de type
+            }
+
+            // Authentification réussie
+            res.status(200).json({ message: 'Connecté avec succès !' });
+        } catch (error) {
+            console.error(error); // Pour déboguer
+            res.status(500).json({ message: 'Erreur lors de la connexion.' });
         }
-        return res.status(200).json(user);
-    } catch (error) {
-        return res.status(500).json({ message: 'Erreur lors de la récupération de l\'utilisateur', error });
     }
-};
+}
 
-// Mettre à jour un utilisateur
-export const updateUser = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!user) {
-            return res.status(404).json({ message: 'Utilisateur non trouvé' });
-        }
-        return res.status(200).json(user);
-    } catch (error) {
-        return res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur', error });
-    }
-};
+// Créer une instance de la classe UserController
+const userController = new UserController();
 
-// Supprimer un utilisateur
-export const deleteUser = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const user = await User.findByIdAndDelete(req.params.id);
-        if (!user) {
-            return res.status(404).json({ message: 'Utilisateur non trouvé' });
-        }
-        return res.status(200).json({ message: 'Utilisateur supprimé avec succès' });
-    } catch (error) {
-        return res.status(500).json({ message: 'Erreur lors de la suppression de l\'utilisateur', error });
-    }
-};
+export default userController;

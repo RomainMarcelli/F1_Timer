@@ -1,13 +1,12 @@
 import express from 'express';
-import { createUser, getUsers, getUserById, updateUser, deleteUser } from '../controllers/userController';
+import userController from '../controllers/userController'; // Importez l'instance du contrôleur
 
 const router = express.Router();
 
-// Routes CRUD
-router.post('/users', createUser);     // Créer un utilisateur
-router.get('/users', getUsers);        // Récupérer tous les utilisateurs
-router.get('/users/:id', getUserById); // Récupérer un utilisateur par ID
-router.put('/users/:id', updateUser);  // Mettre à jour un utilisateur
-router.delete('/users/:id', deleteUser); // Supprimer un utilisateur
+// Route pour enregistrer un nouvel utilisateur
+router.post('/register', (req, res) => userController.registerUser(req, res));
+
+// Route pour connecter un utilisateur
+router.post('/login', (req, res) => userController.loginUser(req, res));
 
 export default router;
