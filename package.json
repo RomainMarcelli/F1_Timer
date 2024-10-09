@@ -1,0 +1,23 @@
+{
+  "name": "f1_timer",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn src/server.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^6.11.4"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/mongodb": "^4.0.7",
+    "@types/mongoose": "^5.11.97",
+    "nodemon": "^3.1.7",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^5.6.3"
+  }
+}
