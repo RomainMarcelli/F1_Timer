@@ -1,7 +1,7 @@
 import express from 'express';
-import path from 'path'; // Assurez-vous d'importer 'path'
 import connectDB from '../src/config/db';
 import userRoutes from './routes/userRoutes'; // Importez le routeur
+import path from 'path';
 
 const app = express();
 const port = 3001;
@@ -25,6 +25,15 @@ app.get('/', (req, res) => {
 
 
 // Démarrer le serveur
+// Servir les fichiers statiques depuis "public"
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Route pour /submit-reaction-time
+app.get('/submit-reaction-time', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'reaction-time.html'));
+});
+
+// Démarrage du serveur
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
