@@ -1,25 +1,25 @@
-version: '3.9'  # Utilisez une version plus récente si disponible
+version: '3.9'
+
 services:
   app:
     build: .
     ports:
-      - "3001:3001"  # Mappe le port 3001 de l'hôte au port 3001 du conteneur
+      - "3001:3001"
     volumes:
-      - .:/app  # Monte le répertoire courant dans /app du conteneur
-      # - /app/node_modules  # Cette ligne est commentée pour éviter de masquer les node_modules du conteneur
+      - .:/app
     environment:
       - NODE_ENV=development
-      - MONGODB_URI=mongodb://mongo:27017/F1_Timer  # URI de connexion à MongoDB
-    command: npm run start  # Commande à exécuter pour démarrer l'application
+      - MONGO_URI=mongodb://mongo:27017/F1_Timer
+    command: npm run start
     depends_on:
-      - mongo  # S'assure que Mongo démarre avant l'application
+      - mongo
 
   mongo:
-    image: mongo:latest  # Utilise la dernière image officielle de MongoDB
+    image: mongo:latest
     ports:
-      - "27017:27017"  # Mappe le port 27017 de l'hôte au port 27017 du conteneur
+      - "27017:27017"
     volumes:
-      - mongo-data:/data/db  # Monte un volume nommé mongo-data pour la persistance des données
+      - mongo-data:/data/db
 
 volumes:
-  mongo-data:  # Déclare le volume mongo-data pour la persistance des données de MongoDB
+  mongo-data:

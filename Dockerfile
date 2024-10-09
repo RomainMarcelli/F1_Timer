@@ -1,23 +1,23 @@
-# Utilise une image Node.js officielle
+# Use official Node.js image
 FROM node:18
 
-# Crée un répertoire de travail
+# Set working directory
 WORKDIR /app
 
-# Copie package.json et package-lock.json
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Installe les dépendances
+# Install dependencies
 RUN npm install
 
-# Copie tout le reste du projet (y compris src/)
+# Copy the rest of the project files
 COPY . .
 
-# Compile le TypeScript en JavaScript
-RUN npm run build  # Cette commande doit générer le fichier dist/server.js
+# Compile TypeScript to JavaScript
+RUN npm run build
 
-# Expose le port utilisé par l'application
+# Expose the application port
 EXPOSE 3001
 
-# Commande pour démarrer l'application
+# Start the application
 CMD ["node", "dist/server.js"]
