@@ -16,3 +16,23 @@ dist/
 
 # Docker
 docker-compose.override.yml
+docker-compose.yml
+.dockerignore
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Testing and coverage
+coverage/
+*.lcov
+
+# Miscellaneous
+*.lock
+*.zip
+*.tar.gz
+*.temp
