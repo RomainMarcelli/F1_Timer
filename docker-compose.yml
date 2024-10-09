@@ -3,14 +3,16 @@ services:
   app:
     build: .
     ports:
-      - "3002:3002"  # Mappe le port 3001 de l'hôte au port 3001 du conteneur
+      - "3001:3001"  # Mappe le port 3001 de l'hôte au port 3001 du conteneur
     volumes:
       - .:/app  # Monte le répertoire courant dans /app du conteneur
-      - /app/node_modules  # Évite de remonter les node_modules du conteneur
+      # - /app/node_modules  # Cette ligne est commentée pour éviter de masquer les node_modules du conteneur
     environment:
       - NODE_ENV=development
       - MONGODB_URI=mongodb://mongo:27017/F1_Timer  # URI de connexion à MongoDB
     command: npm run start  # Commande à exécuter pour démarrer l'application
+    depends_on:
+      - mongo  # S'assure que Mongo démarre avant l'application
 
   mongo:
     image: mongo:latest  # Utilise la dernière image officielle de MongoDB
