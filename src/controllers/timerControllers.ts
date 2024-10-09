@@ -17,7 +17,9 @@ export const createTimer = async (req: Request, res: Response) => {
     await newTimer.save();
     res.status(201).json({ message: 'Timer created successfully', timer: newTimer });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred', details: error.message });
+    // Assertion de type pour que TypeScript sache que 'error' est un objet Error
+    const errorMessage = (error as Error).message || 'An unexpected error occurred';
+    res.status(500).json({ error: 'An error occurred', details: errorMessage });
   }
 };
 
@@ -27,6 +29,7 @@ export const getTimers = async (_req: Request, res: Response) => {
     const timers = await Timer.find();
     res.status(200).json(timers);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred', details: error.message });
+    const errorMessage = (error as Error).message || 'An unexpected error occurred';
+    res.status(500).json({ error: 'An error occurred', details: errorMessage });
   }
 };
