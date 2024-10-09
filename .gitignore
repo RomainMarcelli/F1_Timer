@@ -39,7 +39,3 @@ Thumbs.db   # Windows
 
 # Ignore test results
 *.test.js
-
-
-package.json
-package-lock.json
