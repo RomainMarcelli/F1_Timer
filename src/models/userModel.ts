@@ -1,10 +1,11 @@
 import mongoose, { Document } from 'mongoose';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
   email: string;
   password: string;
   comparePassword(password: string): Promise<boolean>;
+  token?: string;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -17,6 +18,7 @@ const userSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
   },
+  token: { type: String },
 });
 
 // Hachage du mot de passe avant de sauvegarder
