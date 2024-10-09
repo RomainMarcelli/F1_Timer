@@ -1,32 +1,25 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import timerRoutes from './routes/timerRoutes'; // Importation des routes des timers
+import { connectDB } from './config/db'; 
+import userRoutes from './routes/userRoute'; 
+import morgan from 'morgan';
+
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = 3001;
 
-// Middleware pour traiter les requêtes JSON
+// Connectez-vous à MongoDB
+connectDB();
+
+// Middleware pour analyser les corps de requêtes JSON
 app.use(express.json());
 
-// Connexion à MongoDB
-const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/F1_Timer';
-mongoose.connect(mongoUri)
-  .then(() => {
-    console.log('MongoDB connected successfully');
-  })
-  .catch((err) => {
-    console.error('MongoDB connection error:', err);
-  });
+// Utilisez le routeur d'utilisateurs
+app.use('/api/users', userRoutes);
 
-// Route GET simple pour vérifier si le serveur fonctionne
-app.get('/', (req, res) => {
-  res.send('Hello from TypeScript with MongoDB!');
-});
+app.use(morgan('dev'));
 
-// Utiliser les routes des timers
-app.use('/api', timerRoutes);
 
-// Démarrer le serveur
+// Démarrage du serveur
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+    console.log(`Server is running at http://localhost:${port}`);
 });
