@@ -2,7 +2,7 @@
   "name": "f1_timer",
   "version": "1.0.0",
   "description": "TEST",
-  "main": "dist/server.js",
+  "main": "index.js",
   "scripts": {
     "start": "ts-node src/server.ts",
     "build": "tsc"
