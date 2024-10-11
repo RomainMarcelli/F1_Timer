@@ -21,7 +21,7 @@ class UserController {
       await newUser.save();
 
       // Générer un token JWT après la création de l'utilisateur
-      const token = jwt.sign({ id: newUser._id, email: newUser.email }, 'secret_key', { expiresIn: '1h' });
+      const token = jwt.sign({ id: newUser._id }, 'secret_key', { expiresIn: '1h' });
       console.log("Token généré:", token); // Log du token
 
       newUser.token = token; 

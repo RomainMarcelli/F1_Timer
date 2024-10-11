@@ -1,9 +1,9 @@
 {
     "name": "timer-service",
     "version": "1.0.0",
-    "main": "server.js",
+    "main": "server.ts",
     "scripts": {
-      "start": "node dist/server.js",
+      "start": "node timer_service/src/server.ts",
       "build": "tsc"
     },
     "dependencies": {
