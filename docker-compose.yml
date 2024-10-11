@@ -1,25 +1,46 @@
 version: '3.9'
 
 services:
-  app:
-    build: .
+  api-gateway:
+    build: ./api_gateway
     ports:
       - "3001:3001"
-    volumes:
-      - .:/app
-    environment:
-      - NODE_ENV=development
-      - MONGO_URI=mongodb://mongo:27017/F1_Timer
-    command: npm run start
     depends_on:
-      - mongo
+      - user-service
+      - timer-service
 
-  mongo:
+  user-service:
+    build: ./user_service
+    ports:
+      - "3002:3002"
+    environment:
+      - MONGODB_URI=mongodb://mongo-user:27017/user-service
+    depends_on:
+      - mongo-user
+
+  timer-service:
+    build: ./timer_service
+    ports:
+      - "3003:3003"
+    environment:
+      - MONGODB_URI=mongodb://mongo-timer:27017/timer-service
+    depends_on:
+      - mongo-timer
+
+  mongo-user:
     image: mongo:latest
     ports:
       - "27017:27017"
     volumes:
-      - mongo-data:/data/db
+      - mongo-user-data:/data/db
+
+  mongo-timer:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-timer-data:/data/db
 
 volumes:
-  mongo-data:
+  mongo-user-data:
+  mongo-timer-data:
