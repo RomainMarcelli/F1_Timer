@@ -13,6 +13,9 @@ RUN npm install
 # Copier le reste du code
 COPY . .
 
+# Exécuter la compilation TypeScript
+RUN npm run build
+
 # Exposer le port 3002
 EXPOSE 3002
 
