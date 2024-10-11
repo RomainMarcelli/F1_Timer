@@ -13,6 +13,9 @@ RUN npm install
 # Copier le reste de l'application
 COPY . .
 
+# Compile TypeScript to JavaScript
+RUN npm run build
+
 # Exposer le port de l'API Gateway
 EXPOSE 3001
 
